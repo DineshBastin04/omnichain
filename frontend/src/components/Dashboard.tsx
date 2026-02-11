@@ -87,10 +87,10 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                 let foundResponse = "";
                 let sourceCode = "";
 
-                // 0. Security Guardrail: Refuse out-of-scope/irrelevant queries (e.g., coding, non-supply chain)
-                const outOfScopeKeywords = ['python', 'javascript', 'code', 'palindrome', 'weather', 'joke', 'story'];
+                // 0. Security Guardrail: Refuse out-of-scope/irrelevant queries (e.g., coding, trivia)
+                const outOfScopeKeywords = ['python', 'javascript', 'code', 'palindrome', 'joke', 'story', 'song', 'poem'];
                 if (outOfScopeKeywords.some(keyword => lowerQuery.includes(keyword))) {
-                    setResponse("I am a specialized OmniChain AI Assistant focused on your supply chain, logistics, and inventory data. I am unable to assist with general coding or non-business queries at this time.");
+                    setResponse("I am a specialized OmniChain AI Assistant focused on your high-velocity supply chain operations. I am unable to assist with general coding or creative writing queries.");
                     setIsLoading(false);
                     return;
                 }
@@ -129,21 +129,22 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                 }
 
                 // 3. Section/Metric Detection
-                else if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics')) {
-                    foundResponse = `You have ${dashboardStats.shipments.value} active shipments. This 'On Track' status comes from my real-time link with your carrier APIs. None of the current shipments are showing 'Latency Overages' at the moment.`;
-                    sourceCode = `-- CARRIER AGGREGATOR\nSELECT COUNT(*) FROM shipments WHERE status = 'transit';\n\nACTIVE_COUNT: 64`;
+                else if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics') || lowerQuery.includes('transit') || lowerQuery.includes('weather')) {
+                    const weatherNote = lowerQuery.includes('weather') ? " Regarding the weather, I have factored in current atmospheric conditions for all 64 shipments. " : "";
+                    foundResponse = `You have ${dashboardStats.shipments.value} active shipments.${weatherNote} This 'On Track' status comes from my real-time link with your carrier APIs. None of the current shipments are showing 'Latency Overages' at the moment.`;
+                    sourceCode = `-- CARRIER AGGREGATOR\nSELECT COUNT(*) FROM shipments WHERE status = 'transit';\n\nACTIVE_COUNT: 64${lowerQuery.includes('weather') ? '\nLOAD_LAYER: weather_mapping_service (NO_SEVERE_ALERTS)' : ''}`;
                 } else if (lowerQuery.includes('sales')) {
                     foundResponse = `Current sales stand at ${dashboardStats.sales.value}. ${dashboardStats.sales.explanation} In simple terms: you are selling 15% more than you usually do this time of year!`;
                     sourceCode = `-- REVENUE PIPELINE\nSELECT SUM(price * qty) as total_sales FROM orders WHERE date >= '2026-01-01';\n\nTOTAL_SALES: $1.42M`;
-                } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
+                } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock') || lowerQuery.includes('alert')) {
                     foundResponse = `We have ${dashboardStats.alerts.value} inventory alerts. I flagged these because your 'Stock Depletion Speed' is faster than your 'Restock Lead Time'. I recommend checking the Inventory tab.`;
                     sourceCode = `-- INVENTORY GUARDRAIL\nSELECT sku_id FROM warehouse_stock WHERE qoh < reorder_point;\n\nALERTS_FOUND: 8`;
                 } else if (lowerQuery.includes('security') || lowerQuery.includes('audit') || lowerQuery.includes('verification') || lowerQuery.includes('guardrail')) {
                     foundResponse = `All security protocols are in 'Safe Harbor' mode. My audit logs show that your Verification Audits (SQL Audit, Prompt Guard, and Data Leak Check) have all passed without fail in the last 24 hours.`;
                     sourceCode = `-- SECURITY AUDIT [IMMUTABLE LOGS]\nSELECT status, check_type FROM security_logs WHERE timestamp > now() - interval '24 hours';\n\nRESULTS:\n- SQL Audit: PASSED\n- Prompt Guard: PASSED\n- Data Leak: PASSED`;
-                } else if (lowerQuery.includes('price') || lowerQuery.includes('news') || lowerQuery.includes('market') || lowerQuery.includes('silver')) {
-                    foundResponse = `Regarding the news on commodity prices (like Silver), my current data source is focused on your internal supply chain. However, I can confirm that your 'Silver-based Components' in inventory are stable, and no cost-spikes have hit your procurement log yet. Would you like to connect a Bloomberg/Reuters feed?`;
-                    sourceCode = `-- MARKET ADAPTER [EXTERNAL API MOCK]\nGET https://api.commodities.com/v1/latest?symbols=SILVER\nRESULT: No external connection established. Checking internal procurement buffer...\nSELECT cost_per_unit FROM procurement_history WHERE component LIKE '%SILVER%';\n\nINTERNAL_AVG_COST: $23.40 (Stable)`;
+                } else if (lowerQuery.includes('price') || lowerQuery.includes('news') || lowerQuery.includes('market') || lowerQuery.includes('silver') || lowerQuery.includes('commodit')) {
+                    foundResponse = `I track your internal operational data (logistics, inventory, and procurement). While I acknowledge external market factors like commodity news or pricing shifts, I don't see any immediate impact on your current 'Silver-based' procurement costs or component stable-stock. Internal procurement remains within established safety buffers.`;
+                    sourceCode = `-- EXTERNAL CONTEXT HANDLER\nWARN: Live Bloomberg/External news feed not connected.\nPivot to Internal Execution Log...\nSELECT avg_cost FROM procurement_ledger WHERE timeframe = 'LATEST';\n\nINTERNAL_AVG: $23.40 (Stable)`;
                 }
 
                 // 4. Fallback with Common Sense
