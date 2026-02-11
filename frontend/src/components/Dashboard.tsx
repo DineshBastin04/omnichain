@@ -10,7 +10,8 @@ import {
     ShieldCheck,
     BarChart3,
     Truck,
-    Package
+    Package,
+    Menu
 } from 'lucide-react';
 import {
     AreaChart,
@@ -35,19 +36,20 @@ const data = [
 
 interface DashboardProps {
     activeTab: string;
+    onToggleSidebar: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
+const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => {
     const [query, setQuery] = useState('');
 
     const renderContent = () => {
         switch (activeTab) {
             case 'analytics':
                 return (
-                    <div className="glass-card flex flex-col items-center justify-center min-h-[400px]">
+                    <div className="glass-card flex flex-col items-center justify-center min-h-[400px] text-center p-4">
                         <BarChart3 size={64} className="text-blue-400 mb-6 animate-pulse" />
                         <h2 className="text-2xl font-bold text-white mb-2">Advanced Analytics</h2>
-                        <p className="text-slate-400 text-center max-w-md">
+                        <p className="text-slate-400 max-w-md">
                             Deep-dive into sales patterns and supplier performance. Our AI indexer is currently processing 1.4M data points for real-time forecasting.
                         </p>
                     </div>
@@ -56,7 +58,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
                 return (
                     <div className="glass-card flex flex-col items-center justify-center min-h-[400px]">
                         <Truck size={64} className="text-purple-400 mb-6" />
-                        <h2 className="text-2xl font-bold text-white mb-2">Global Logistics Network</h2>
+                        <h2 className="text-2xl font-bold text-white mb-2 text-center">Global Logistics Network</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mt-8">
                             {[1, 2, 3, 4].map(i => (
                                 <div key={i} className="p-4 bg-white/5 border border-glass-border rounded-xl">
@@ -77,7 +79,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
                     <div className="glass-card flex flex-col items-center justify-center min-h-[400px]">
                         <Package size={64} className="text-green-400 mb-6" />
                         <h2 className="text-2xl font-bold text-white mb-2">Smart Inventory Management</h2>
-                        <p className="text-slate-400 mb-8">Stock optimization across 14 warehouses</p>
+                        <p className="text-slate-400 mb-8 text-center">Stock optimization across 14 warehouses</p>
                         <div className="w-full h-64 bg-white/5 rounded-xl border border-glass-border flex items-center justify-center">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={data}>
@@ -100,9 +102,9 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
                         <div className="glass-card bg-red-500/5 border-red-500/20">
                             <div className="flex items-center space-x-4 mb-4">
                                 <ShieldCheck className="text-red-400" size={32} />
-                                <h2 className="text-2xl font-bold text-white">AI Security Guardrails</h2>
+                                <h2 className="text-xl md:text-2xl font-bold text-white">AI Security Guardrails</h2>
                             </div>
-                            <p className="text-slate-300">Active monitoring: Prompt Injection, SQL Injection, Data Leaks.</p>
+                            <p className="text-slate-300 text-sm md:text-base">Active monitoring: Prompt Injection, SQL Injection, Data Leaks.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="glass-card">
@@ -124,7 +126,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
                 return (
                     <>
                         {/* Stats Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                             {[
                                 { label: 'Total Sales', value: '$1.2M', growth: '+12.5%', icon: <TrendingUp className="text-green-400" /> },
                                 { label: 'Stock Alerts', value: '14', growth: 'Low Priority', icon: <AlertTriangle className="text-amber-400" /> },
@@ -135,8 +137,8 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
                                         <span className="text-slate-400 font-medium">{stat.label}</span>
                                         {stat.icon}
                                     </div>
-                                    <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                                    <span className="text-sm text-slate-500">{stat.growth} from last month</span>
+                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
+                                    <span className="text-xs md:text-sm text-slate-500">{stat.growth} from last month</span>
                                 </div>
                             ))}
                         </div>
@@ -145,7 +147,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
                             <div className="glass-card">
                                 <h3 className="text-lg font-semibold text-white mb-6">Sales Performance</h3>
-                                <div className="h-80">
+                                <div className="h-64 md:h-80">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <AreaChart data={data}>
                                             <defs>
@@ -168,7 +170,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
 
                             <div className="glass-card">
                                 <h3 className="text-lg font-semibold text-white mb-6">Inventory Levels</h3>
-                                <div className="h-80">
+                                <div className="h-64 md:h-80">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <BarChart data={data}>
                                             <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
@@ -193,17 +195,17 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
                                     { agent: 'EDA Agent', action: 'Anomaly detected in supplier latency', time: '2 mins ago', status: 'verified' },
                                     { agent: 'Forecasting Agent', action: 'Demand spike predicted for Q3 electronics', time: '15 mins ago', status: 'verified' },
                                 ].map((log, i) => (
-                                    <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-glass-border">
+                                    <div key={i} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white/5 rounded-xl border border-glass-border space-y-3 sm:space-y-0">
                                         <div className="flex items-center space-x-4">
-                                            <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                            <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
                                                 <ShieldCheck size={20} />
                                             </div>
                                             <div>
-                                                <div className="text-white font-medium">{log.action}</div>
-                                                <div className="text-sm text-slate-500">{log.agent} • {log.time}</div>
+                                                <div className="text-white font-medium text-sm md:text-base">{log.action}</div>
+                                                <div className="text-xs md:text-sm text-slate-500">{log.agent} • {log.time}</div>
                                             </div>
                                         </div>
-                                        <span className="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-bold rounded-full uppercase tracking-wider border border-green-500/20">
+                                        <span className="px-3 py-1 bg-green-500/10 text-green-400 text-[10px] md:text-xs font-bold rounded-full uppercase tracking-wider border border-green-500/20">
                                             {log.status}
                                         </span>
                                     </div>
@@ -216,20 +218,30 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
     };
 
     return (
-        <main className="ml-64 p-8 flex-1 overflow-y-auto">
+        <main className="lg:ml-64 p-4 md:p-8 flex-1 overflow-y-auto">
             {/* Header Area */}
-            <header className="flex justify-between items-center mb-8">
-                <div>
-                    <h2 className="text-3xl font-bold text-white">OmniChain AI {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
-                    <p className="text-slate-400">Real-time insights and agentic optimizations</p>
+            <header className="flex flex-col lg:flex-row justify-between lg:items-center mb-8 space-y-4 lg:space-y-0">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-2xl md:text-3xl font-bold text-white">
+                            OmniChain AI <span className="text-blue-400">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</span>
+                        </h2>
+                        <p className="text-sm md:text-base text-slate-400">Real-time insights and agentic optimizations</p>
+                    </div>
+                    <button
+                        onClick={onToggleSidebar}
+                        className="lg:hidden p-2 text-slate-400 hover:text-white glass rounded-xl"
+                    >
+                        <Menu size={24} />
+                    </button>
                 </div>
 
-                <div className="relative w-96">
+                <div className="relative w-full lg:w-96">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
                         type="text"
-                        placeholder="Ask anything (e.g., 'Forecast sales for Q3')"
-                        className="w-full bg-white/5 border border-glass-border rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                        placeholder="Ask anything..."
+                        className="w-full bg-white/5 border border-glass-border rounded-2xl py-3 pl-12 pr-12 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                     />
