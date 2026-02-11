@@ -71,6 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
     const [query, setQuery] = useState('');
     const [response, setResponse] = useState<string | null>(null);
     const [showSource, setShowSource] = useState(false);
+    const [activeSource, setActiveSource] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleQuery = async (e: React.KeyboardEvent) => {
@@ -78,11 +79,13 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
             setIsLoading(true);
             setResponse(null);
             setShowSource(false);
+            setActiveSource('');
 
             // Simulating a robust, data-aware agent response
             setTimeout(() => {
                 const lowerQuery = query.toLowerCase();
                 let foundResponse = "";
+                let sourceCode = "";
 
                 // 0. Security Guardrail: Refuse out-of-scope/irrelevant queries (e.g., coding, non-supply chain)
                 const outOfScopeKeywords = ['python', 'javascript', 'code', 'palindrome', 'weather', 'joke', 'story'];
@@ -104,6 +107,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                     const ship = logisticsData.find(s => s.id === shipmentId);
                     if (ship) {
                         foundResponse = `I found a record for ${shipmentId}. It's currently ${ship.status} towards ${ship.destination} with an ETA of ${ship.eta}. I calculated this by averaging the carrier's last 5 reportings against the road distance.`;
+                        sourceCode = `-- LOGISTICS PIPELINE [REAL-TIME]\nSELECT * FROM logistics_live_db WHERE shipment_id = '${shipmentId}';\n\nRESULT:\n| ID | Status | ETA | Loc |\n|---|---|---|---|\n| ${ship.id} | ${ship.status} | ${ship.eta} | ${ship.destination} |`;
                     } else {
                         foundResponse = `I see you're asking about ${shipmentId}, but I don't see that specific ID in our active shipment database. Please check the Logistics tab for valid IDs.`;
                     }
@@ -113,6 +117,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                     const monthData = data.find(d => d.name.toLowerCase() === matchedMonth);
                     if (monthData) {
                         foundResponse = `In ${monthData.name}, your sales were ${monthData.sales} units with an inventory level of ${monthData.inventory}. My predictive engine shows a forecast of ${monthData.forecast} for the following period based on this historical trend.`;
+                        sourceCode = `-- ANALYTICS ENGINE [HISTORICAL]\nSELECT sales, inventory, forecast\nFROM monthly_stats\nWHERE month = '${monthData.name}';\n\nDATA SNAPSHOT:\n{ sales: ${monthData.sales}, inventory: ${monthData.inventory}, forecast: ${monthData.forecast} }`;
                     }
                 }
 
@@ -120,25 +125,35 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                 else if (suppliers.some(s => lowerQuery.includes(s.name.toLowerCase()))) {
                     const s = suppliers.find(s => lowerQuery.includes(s.name.toLowerCase()))!;
                     foundResponse = `Ah, ${s.name}. Their ${s.score}% score is a 'weighted reliability index'. This means I looked at their last 50 deliveries and noticed they are slightly faster than your backup carriers. ${s.details}`;
+                    sourceCode = `-- SUPPLIER INTELLIGENCE\nagg_reliability = (delivered_on_time / total_shipments) * weighting_factor;\n\nCALCULATION:\n(${s.score}/100) * 1.0 = ${s.score}% Score.`;
                 }
 
                 // 3. Section/Metric Detection
                 else if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics')) {
                     foundResponse = `You have ${dashboardStats.shipments.value} active shipments. This 'On Track' status comes from my real-time link with your carrier APIs. None of the current shipments are showing 'Latency Overages' at the moment.`;
+                    sourceCode = `-- CARRIER AGGREGATOR\nSELECT COUNT(*) FROM shipments WHERE status = 'transit';\n\nACTIVE_COUNT: 64`;
                 } else if (lowerQuery.includes('sales')) {
                     foundResponse = `Current sales stand at ${dashboardStats.sales.value}. ${dashboardStats.sales.explanation} In simple terms: you are selling 15% more than you usually do this time of year!`;
+                    sourceCode = `-- REVENUE PIPELINE\nSELECT SUM(price * qty) as total_sales FROM orders WHERE date >= '2026-01-01';\n\nTOTAL_SALES: $1.42M`;
                 } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
                     foundResponse = `We have ${dashboardStats.alerts.value} inventory alerts. I flagged these because your 'Stock Depletion Speed' is faster than your 'Restock Lead Time'. I recommend checking the Inventory tab.`;
+                    sourceCode = `-- INVENTORY GUARDRAIL\nSELECT sku_id FROM warehouse_stock WHERE qoh < reorder_point;\n\nALERTS_FOUND: 8`;
                 } else if (lowerQuery.includes('security') || lowerQuery.includes('audit') || lowerQuery.includes('verification') || lowerQuery.includes('guardrail')) {
                     foundResponse = `All security protocols are in 'Safe Harbor' mode. My audit logs show that your Verification Audits (SQL Audit, Prompt Guard, and Data Leak Check) have all passed without fail in the last 24 hours.`;
+                    sourceCode = `-- SECURITY AUDIT [IMMUTABLE LOGS]\nSELECT status, check_type FROM security_logs WHERE timestamp > now() - interval '24 hours';\n\nRESULTS:\n- SQL Audit: PASSED\n- Prompt Guard: PASSED\n- Data Leak: PASSED`;
+                } else if (lowerQuery.includes('price') || lowerQuery.includes('news') || lowerQuery.includes('market') || lowerQuery.includes('silver')) {
+                    foundResponse = `Regarding the news on commodity prices (like Silver), my current data source is focused on your internal supply chain. However, I can confirm that your 'Silver-based Components' in inventory are stable, and no cost-spikes have hit your procurement log yet. Would you like to connect a Bloomberg/Reuters feed?`;
+                    sourceCode = `-- MARKET ADAPTER [EXTERNAL API MOCK]\nGET https://api.commodities.com/v1/latest?symbols=SILVER\nRESULT: No external connection established. Checking internal procurement buffer...\nSELECT cost_per_unit FROM procurement_history WHERE component LIKE '%SILVER%';\n\nINTERNAL_AVG_COST: $23.40 (Stable)`;
                 }
 
                 // 4. Fallback with Common Sense
                 else {
                     foundResponse = "I've analyzed your real-time supply chain. Everything looks 'Stable'. By comparing your 64 active shipments with your $1.42M sales, I see a healthy flow. Would you like to check the 'Logistics' or 'Inventory' details?";
+                    sourceCode = `-- HEURISTIC AGGREGATOR\nIF (shipments_on_track > 0.9) AND (sales_growth > 0.1) RETURN 'Stable';`;
                 }
 
                 setResponse(foundResponse);
+                setActiveSource(sourceCode);
                 setIsLoading(false);
             }, 1200);
         }
@@ -416,20 +431,9 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
 
                                 {showSource && (
                                     <div className="mt-4 p-4 bg-black/40 rounded-xl font-mono text-[10px] md:text-xs text-green-400 border border-green-500/20 max-h-48 overflow-y-auto w-full">
-                                        <div className="mb-2 text-slate-500 italic pb-2 border-b border-green-500/10">Connected via: ETLPipeline.ingest_dataframe (SQL Query Mode)</div>
+                                        <div className="mb-2 text-slate-500 italic pb-2 border-b border-green-500/10">Connected via: OmniChain Orchestrator [{new Date().toLocaleTimeString()}]</div>
                                         <pre className="whitespace-pre-wrap">
-                                            {`-- SQL AUDIT LOG [${new Date().toLocaleTimeString()}]
-SELECT shipment_id, status, current_gps, eta_calculation
-FROM logistics_live_db
-WHERE carrier_reliability > 0.85;
-
-RAW DATA SNAPSHOT (DataFrame Preview):
-| ID      | Status | Score | Logic               |
-|---------|--------|-------|---------------------|
-| TR-1241 | Transit| 0.94  | On-time Probability |
-| TR-1242 | Transit| 0.82  | At-risk (Traffic)   |
-| SW-HARB | Active | 0.85  | Historical Mean     |
-`}
+                                            {activeSource}
                                         </pre>
                                     </div>
                                 )}
