@@ -26,7 +26,7 @@ body {
   min-height: 100vh;
 }
 
-.glass {
+@utility glass {
   background: var(--glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -34,9 +34,10 @@ body {
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
-.glass-card {
+@utility glass-card {
   @apply glass rounded-2xl p-6 transition-all duration-300 hover:border-white/20;
 }
+
 
 .animate-glow {
   animation: glow 4s ease-in-out infinite alternate;
@@ -46,8 +47,8 @@ body {
   from {
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
   }
+
   to {
     box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
   }
 }
-
