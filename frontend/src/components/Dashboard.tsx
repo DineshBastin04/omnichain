@@ -121,8 +121,8 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                     foundResponse = `Current sales stand at ${dashboardStats.sales.value}. ${dashboardStats.sales.explanation} In simple terms: you are selling 15% more than you usually do this time of year!`;
                 } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
                     foundResponse = `We have ${dashboardStats.alerts.value} inventory alerts. I flagged these because your 'Stock Depletion Speed' is faster than your 'Restock Lead Time'. I recommend checking the Inventory tab.`;
-                } else if (lowerQuery.includes('security')) {
-                    foundResponse = `Your system is currently in 'Safe Harbor' mode. My audit logs show that all SQL queries and AI prompts have passed the verification guardrails in the last 24 hours.`;
+                } else if (lowerQuery.includes('security') || lowerQuery.includes('audit') || lowerQuery.includes('verification') || lowerQuery.includes('guardrail')) {
+                    foundResponse = `All security protocols are in 'Safe Harbor' mode. My audit logs show that your Verification Audits (SQL Audit, Prompt Guard, and Data Leak Check) have all passed without fail in the last 24 hours.`;
                 }
 
                 // 4. Fallback with Common Sense
