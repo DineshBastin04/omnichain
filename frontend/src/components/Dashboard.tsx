@@ -84,6 +84,14 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                 const lowerQuery = query.toLowerCase();
                 let foundResponse = "";
 
+                // 0. Security Guardrail: Refuse out-of-scope/irrelevant queries (e.g., coding, non-supply chain)
+                const outOfScopeKeywords = ['python', 'javascript', 'code', 'palindrome', 'weather', 'joke', 'story'];
+                if (outOfScopeKeywords.some(keyword => lowerQuery.includes(keyword))) {
+                    setResponse("I am a specialized OmniChain AI Assistant focused on your supply chain, logistics, and inventory data. I am unable to assist with general coding or non-business queries at this time.");
+                    setIsLoading(false);
+                    return;
+                }
+
                 // 1. Shipment Detection (TR-XXXX)
                 const shipmentMatch = lowerQuery.match(/tr-\d{4}/);
 
