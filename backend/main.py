@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.core.config import settings
 from backend.api.auth import auth_router
+from backend.api.agents import router as agent_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -22,3 +23,4 @@ async def root():
     return {"message": "Welcome to the Supply Chain AI Intelligence Platform API"}
 
 app.include_router(auth_router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
+app.include_router(agent_router, prefix=f"{settings.API_V1_STR}/agents", tags=["agents"])

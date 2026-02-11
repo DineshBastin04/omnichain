@@ -26,12 +26,15 @@ import {
 } from 'recharts';
 
 const data = [
-    { name: 'Jan', sales: 4000, inventory: 2400 },
-    { name: 'Feb', sales: 3000, inventory: 1398 },
-    { name: 'Mar', sales: 2000, inventory: 9800 },
-    { name: 'Apr', sales: 2780, inventory: 3908 },
-    { name: 'May', sales: 1890, inventory: 4800 },
-    { name: 'Jun', sales: 2390, inventory: 3800 },
+    { name: 'Jan', sales: 4200, inventory: 2400, forecast: 4000 },
+    { name: 'Feb', sales: 3800, inventory: 1398, forecast: 3500 },
+    { name: 'Mar', sales: 5200, inventory: 9800, forecast: 4800 },
+    { name: 'Apr', sales: 4780, inventory: 3908, forecast: 5000 },
+    { name: 'May', sales: 5890, inventory: 4800, forecast: 5500 },
+    { name: 'Jun', sales: 6390, inventory: 3800, forecast: 6200 },
+    { name: 'Jul', sales: 7100, inventory: 3200, forecast: 6800 },
+    { name: 'Aug', sales: 7500, inventory: 2900, forecast: 7200 },
+    { name: 'Sep', sales: 6800, inventory: 4500, forecast: 7000 },
 ];
 
 interface DashboardProps {
@@ -41,17 +44,83 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => {
     const [query, setQuery] = useState('');
+    const [response, setResponse] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleQuery = async (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && query.trim()) {
+            setIsLoading(true);
+            setResponse(null);
+            try {
+                // Mock API call for demo if backend not running, otherwise use fetch
+                // In a real scenario, we'd use: const res = await fetch('/api/v1/agents/query', ...)
+
+                // Simulating a smart agent response based on keywords
+                setTimeout(() => {
+                    let mockRes = "I've analyzed your supply chain data. ";
+                    if (query.toLowerCase().includes('sales')) {
+                        mockRes += "Sales are trending up by 12.5% this quarter, driven mostly by North American regions.";
+                    } else if (query.toLowerCase().includes('inventory')) {
+                        mockRes += "Inventory turnover is at 4.2x. There's a potential stockout risk for 'SKU-992' in 14 days.";
+                    } else {
+                        mockRes += "Based on current trends, your overall supply chain health is 'Stable'. I recommend increasing safety stock for top-selling items.";
+                    }
+                    setResponse(mockRes);
+                    setIsLoading(false);
+                }, 1500);
+            } catch (err) {
+                setResponse("Sorry, I encountered an error while processing your request.");
+                setIsLoading(false);
+            }
+        }
+    };
 
     const renderContent = () => {
         switch (activeTab) {
             case 'analytics':
                 return (
-                    <div className="glass-card flex flex-col items-center justify-center min-h-[400px] text-center p-4">
-                        <BarChart3 size={64} className="text-blue-400 mb-6 animate-pulse" />
-                        <h2 className="text-2xl font-bold text-white mb-2">Advanced Analytics</h2>
-                        <p className="text-slate-400 max-w-md">
-                            Deep-dive into sales patterns and supplier performance. Our AI indexer is currently processing 1.4M data points for real-time forecasting.
-                        </p>
+                    <div className="space-y-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="glass-card">
+                                <h3 className="text-lg font-semibold text-white mb-6">Predictive Demand Forecast</h3>
+                                <div className="h-80">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart data={data}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+                                            <XAxis dataKey="name" stroke="#64748B" axisLine={false} tickLine={false} />
+                                            <YAxis stroke="#64748B" axisLine={false} tickLine={false} />
+                                            <Tooltip contentStyle={{ background: '#0F172A', border: '1px solid #1E293B', borderRadius: '12px' }} />
+                                            <Area type="monotone" dataKey="sales" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.1} />
+                                            <Area type="monotone" dataKey="forecast" stroke="#10B981" strokeDasharray="5 5" fill="transparent" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                </div>
+                                <p className="mt-4 text-sm text-slate-400">The dashed green line represents AI-predicted demand for the next cycle.</p>
+                            </div>
+                            <div className="glass-card">
+                                <h3 className="text-lg font-semibold text-white mb-6">Supplier Reliability Index</h3>
+                                <div className="space-y-6">
+                                    {[
+                                        { name: 'Logistics Pro', score: 98, status: 'Elite' },
+                                        { name: 'Swift Harbor', score: 85, status: 'Good' },
+                                        { name: 'Global Direct', score: 62, status: 'At Risk' },
+                                    ].map((sup, i) => (
+                                        <div key={i}>
+                                            <div className="flex justify-between mb-2">
+                                                <span className="text-white font-medium">{sup.name}</span>
+                                                <span className={sup.score > 80 ? "text-green-400" : "text-amber-400"}>{sup.score}%</span>
+                                            </div>
+                                            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full ${sup.score > 80 ? 'bg-green-500' : 'bg-amber-500'}`}
+                                                    style={{ width: `${sup.score}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 );
             case 'logistics':
@@ -125,12 +194,34 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
             default:
                 return (
                     <>
+                        {/* Response Area */}
+                        {(isLoading || response) && (
+                            <div className="glass-card mb-8 border-blue-500/30 bg-blue-500/5 animate-in fade-in slide-in-from-top-4 duration-500">
+                                <div className="flex items-center space-x-3 mb-4">
+                                    <Sparkles className="text-blue-400" size={20} />
+                                    <h3 className="text-white font-semibold">AI Assistant Response</h3>
+                                </div>
+                                {isLoading ? (
+                                    <div className="flex items-center space-x-2 text-slate-400 italic text-sm">
+                                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-.3s]"></div>
+                                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
+                                        <span>Consulting multi-agent orchestrator...</span>
+                                    </div>
+                                ) : (
+                                    <div className="text-slate-200 text-sm md:text-base leading-relaxed">
+                                        {response}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                             {[
-                                { label: 'Total Sales', value: '$1.2M', growth: '+12.5%', icon: <TrendingUp className="text-green-400" /> },
-                                { label: 'Stock Alerts', value: '14', growth: 'Low Priority', icon: <AlertTriangle className="text-amber-400" /> },
-                                { label: 'Active Shipments', value: '42', growth: 'On Track', icon: <Box className="text-blue-400" /> },
+                                { label: 'Total Sales', value: '$1.42M', growth: '+15.2%', icon: <TrendingUp className="text-green-400" /> },
+                                { label: 'Stock Alerts', value: '08', growth: '4 Critical', icon: <AlertTriangle className="text-amber-400" /> },
+                                { label: 'Active Shipments', value: '64', growth: 'On Track', icon: <Box className="text-blue-400" /> },
                             ].map((stat, i) => (
                                 <div key={i} className="glass-card animate-glow">
                                     <div className="flex justify-between items-start mb-4">
@@ -192,8 +283,9 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                             <h3 className="text-lg font-semibold text-white mb-4">Agent Verification Logs</h3>
                             <div className="space-y-4">
                                 {[
-                                    { agent: 'EDA Agent', action: 'Anomaly detected in supplier latency', time: '2 mins ago', status: 'verified' },
+                                    { agent: 'EDA Agent', action: 'Anomaly detected in supplier latency (Carrier #34)', time: '2 mins ago', status: 'verified' },
                                     { agent: 'Forecasting Agent', action: 'Demand spike predicted for Q3 electronics', time: '15 mins ago', status: 'verified' },
+                                    { agent: 'Security Agent', action: 'System-wide guardrail audit complete', time: '1 hour ago', status: 'verified' },
                                 ].map((log, i) => (
                                     <div key={i} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white/5 rounded-xl border border-glass-border space-y-3 sm:space-y-0">
                                         <div className="flex items-center space-x-4">
@@ -244,6 +336,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                         className="w-full bg-white/5 border border-glass-border rounded-2xl py-3 pl-12 pr-12 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={handleQuery}
                     />
                     <Sparkles className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 animate-pulse" size={18} />
                 </div>
