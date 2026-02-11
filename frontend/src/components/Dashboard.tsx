@@ -58,12 +58,16 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                 // Simulating a smart agent response based on keywords
                 setTimeout(() => {
                     let mockRes = "I've analyzed your supply chain data. ";
-                    if (query.toLowerCase().includes('sales')) {
-                        mockRes += "Sales are trending up by 12.5% this quarter, driven mostly by North American regions.";
-                    } else if (query.toLowerCase().includes('inventory')) {
-                        mockRes += "Inventory turnover is at 4.2x. There's a potential stockout risk for 'SKU-992' in 14 days.";
+                    const lowerQuery = query.toLowerCase();
+
+                    if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics')) {
+                        mockRes += "There are currently 64 active shipments on track. Carrier performance is at 94%, with no significant delay risks detected for the next 48 hours.";
+                    } else if (lowerQuery.includes('sales')) {
+                        mockRes += "Total sales have reached $1.42M, a 15.2% increase from last month. The growth is primarily driven by electronics and home goods.";
+                    } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
+                        mockRes += "Inventory levels are healthy at 4.2x turnover. However, 8 stock alerts require attention (4 critical). I recommend rebalancing SKU-992 across warehouses.";
                     } else {
-                        mockRes += "Based on current trends, your overall supply chain health is 'Stable'. I recommend increasing safety stock for top-selling items.";
+                        mockRes += "Your overall supply chain health is 'Stable'. Active shipments (64) and sales ($1.42M) are trending positively. I recommend reviewing the 8 stock alerts in the Inventory tab.";
                     }
                     setResponse(mockRes);
                     setIsLoading(false);
