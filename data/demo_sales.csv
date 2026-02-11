@@ -1,0 +1,31 @@
+date,product_id,product_name,category,sales,quantity,unit_price
+2026-01-01,1,Quantum Lens Pro,Electronics,1299.99,1,1299.99
+2026-01-02,1,Quantum Lens Pro,Electronics,2599.98,2,1299.99
+2026-01-03,2,Nebula Smartwatch,Electronics,499.00,2,249.50
+2026-01-04,3,AeroFlow Mesh Runner,Apparel,85.00,1,85.00
+2026-01-05,1,Quantum Lens Pro,Electronics,1299.99,1,1299.99
+2026-01-06,2,Nebula Smartwatch,Electronics,1247.50,5,249.50
+2026-01-07,4,Titanium EDC Pen,Stationery,45.00,1,45.00
+2026-01-08,5,Bio-Organic Fertilizer,Home & Garden,29.99,1,29.99
+2026-01-09,1,Quantum Lens Pro,Electronics,6499.95,5,1299.99
+2026-01-10,3,AeroFlow Mesh Runner,Apparel,850.00,10,85.00
+2026-01-11,2,Nebula Smartwatch,Electronics,249.50,1,249.50
+2026-01-12,6,Solar Power Bank 20k,Electronics,118.00,2,59.00
+2026-01-13,7,Ergo-Chair Graphite,Furniture,350.00,1,350.00
+2026-01-14,1,Quantum Lens Pro,Electronics,1299.99,1,1299.99
+2026-01-15,8,Lumina Smart Bulb,Home & Garden,99.95,5,19.99
+2026-01-16,9,Vortex Blender,Kitchen,149.00,1,149.00
+2026-01-17,10,Alpine Trail Pack,Outdoor,110.00,1,110.00
+2026-01-18,1,Quantum Lens Pro,Electronics,2599.98,2,1299.99
+2026-01-19,3,AeroFlow Mesh Runner,Apparel,170.00,2,85.00
+2026-01-20,1,Quantum Lens Pro,Electronics,1299.99,1,1299.99
+2026-01-21,5,Bio-Organic Fertilizer,Home & Garden,149.95,5,29.99
+2026-01-22,1,Quantum Lens Pro,Electronics,12999.90,10,1299.99
+2026-01-23,2,Nebula Smartwatch,Electronics,249.50,1,249.50
+2026-01-24,3,AeroFlow Mesh Runner,Apparel,255.00,3,85.00
+2026-01-25,4,Titanium EDC Pen,Stationery,225.00,5,45.00
+2026-01-26,1,Quantum Lens Pro,Electronics,1299.99,1,1299.99
+2026-01-27,2,Nebula Smartwatch,Electronics,499.00,2,249.50
+2026-01-28,3,AeroFlow Mesh Runner,Apparel,850.00,10,85.00
+2026-01-29,6,Solar Power Bank 20k,Electronics,590.00,10,59.00
+2026-01-30,1,Quantum Lens Pro,Electronics,1299.99,1,1299.99

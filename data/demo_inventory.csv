@@ -1,0 +1,11 @@
+product_id,product_name,category,stock_level,reorder_point,status
+1,Quantum Lens Pro,Electronics,45,10,Healthy
+2,Nebula Smartwatch,Electronics,8,15,Reorder Required
+3,AeroFlow Mesh Runner,Apparel,62,20,Healthy
+4,Titanium EDC Pen,Stationery,12,10,Healthy
+5,Bio-Organic Fertilizer,Home & Garden,5,10,Low Stock
+6,Solar Power Bank 20k,Electronics,25,10,Healthy
+7,Ergo-Chair Graphite,Furniture,3,5,Low Stock
+8,Lumina Smart Bulb,Home & Garden,120,30,Overstock
+9,Vortex Blender,Kitchen,15,10,Healthy
+10,Alpine Trail Pack,Outdoor,10,15,Reorder Required
