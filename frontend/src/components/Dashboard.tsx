@@ -86,6 +86,11 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
 
                 // 1. Shipment Detection (TR-XXXX)
                 const shipmentMatch = lowerQuery.match(/tr-\d{4}/);
+
+                // 2. Month Detection (Jan, Feb, March, etc.)
+                const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep'];
+                const matchedMonth = months.find(m => lowerQuery.includes(m));
+
                 if (shipmentMatch) {
                     const shipmentId = shipmentMatch[0].toUpperCase();
                     const ship = logisticsData.find(s => s.id === shipmentId);
@@ -93,6 +98,13 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                         foundResponse = `I found a record for ${shipmentId}. It's currently ${ship.status} towards ${ship.destination} with an ETA of ${ship.eta}. I calculated this by averaging the carrier's last 5 reportings against the road distance.`;
                     } else {
                         foundResponse = `I see you're asking about ${shipmentId}, but I don't see that specific ID in our active shipment database. Please check the Logistics tab for valid IDs.`;
+                    }
+                }
+
+                else if (matchedMonth) {
+                    const monthData = data.find(d => d.name.toLowerCase() === matchedMonth);
+                    if (monthData) {
+                        foundResponse = `In ${monthData.name}, your sales were ${monthData.sales} units with an inventory level of ${monthData.inventory}. My predictive engine shows a forecast of ${monthData.forecast} for the following period based on this historical trend.`;
                     }
                 }
 
