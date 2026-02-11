@@ -24,7 +24,16 @@ body {
   background: radial-gradient(circle at top left, #1E293B, #0F172A);
   color: var(--foreground);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Fix for browser console warnings regarding vendor prefixes and :host */
+:root {
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
 
 @utility glass {
   background: var(--glass);
