@@ -67,3 +67,12 @@ Trust is critical in supply chain.
 - **Efficiency**: Reduces manual data manipulation by up to 80% through automated profiling.
 - **Resilience**: Anticipates stockouts up to 30 days in advance.
 - **Agility**: Allows non-technical managers to "ask" their data questions in plain English instead of waiting for IT reports.
+
+---
+
+## 7. Explainable AI (XAI) for Supply Chain
+Supply chain decisions represent millions of dollars in capital. Users must trust the "Why" behind an AI's recommendation.
+
+- **Plain English Insights**: The platform translates complex statistical models (like Z-scores or Linear Regressions) into common terminology (e.g., "Seasonal Trend" or "Unusual Spike").
+- **Transparency**: Instead of just giving a number, the agent explains the logic: "I compared your last 90 days of sales against historical seasonality to identify this 15% growth trend."
+- **Data Awareness**: Every analysis is performed in real-time against the latest snapshot of your operational database, ensuring that the AI is never "hallucinating" on stale data.

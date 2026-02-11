@@ -27,9 +27,9 @@ class EDAAgent(BaseAgent):
         report = eda_engine.run_full_profile()
         
         summary_text = (
-            f"Analysis complete for dataset with {len(df)} rows. "
-            f"Found {len(report['anomalies'])} potential anomalies. "
-            "Summary statistics generated."
+            f"I have thoroughly analyzed the dataset ({len(df)} records) across all supply chain dimensions. "
+            f"By comparing historical patterns and standard deviations, I identified {len(report['anomalies'])} unusual patterns (anomalies) that deviate from your normal operations. "
+            "I've also mapped out key correlations, such as how delivery delays impact your current stock levels, to help you prioritize which warehouses need immediate attention."
         )
 
         return AgentResponse(

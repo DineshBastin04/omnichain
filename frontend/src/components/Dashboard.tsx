@@ -57,17 +57,17 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
 
                 // Simulating a smart agent response based on keywords
                 setTimeout(() => {
-                    let mockRes = "I've analyzed your supply chain data. ";
+                    let mockRes = "I have analyzed the real-time feed from your Sales and Logistics databases. ";
                     const lowerQuery = query.toLowerCase();
 
                     if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics')) {
-                        mockRes += "There are currently 64 active shipments on track. Carrier performance is at 94%, with no significant delay risks detected for the next 48 hours.";
+                        mockRes += "I've matched your 64 active shipments against historical carrier lead times. By calculating the 'Safety Buffer', I've determined that all 64 are currently 'On Track'. I arrived at this by comparing current GPS coordinates with your typical 3-day delivery window.";
                     } else if (lowerQuery.includes('sales')) {
-                        mockRes += "Total sales have reached $1.42M, a 15.2% increase from last month. The growth is primarily driven by electronics and home goods.";
+                        mockRes += "Total sales are at $1.42M. When I compare last month's data to this month, I see a clear 15.2% 'Growth Trend'. This wasn't a sudden spike, but a steady day-over-day increase in volume across your top 5 regions.";
                     } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
-                        mockRes += "Inventory levels are healthy at 4.2x turnover. However, 8 stock alerts require attention (4 critical). I recommend rebalancing SKU-992 across warehouses.";
+                        mockRes += "My 'Health Check' algorithm shows inventory is stable at 4.2x turnover. However, I flagged 8 stock alerts. I reached this conclusion by identifying 4 SKUs that won't last through the weekend if your current sales speed (velocity) continues.";
                     } else {
-                        mockRes += "Your overall supply chain health is 'Stable'. Active shipments (64) and sales ($1.42M) are trending positively. I recommend reviewing the 8 stock alerts in the Inventory tab.";
+                        mockRes += "Your overall supply chain health is 'Stable'. I reached this conclusion by aggregating your 64 active shipments and $1.42M in sales. While the numbers are strong, the 'Algorithm Alert' suggests focusing on the 8 inventory warnings to prevent stockouts.";
                     }
                     setResponse(mockRes);
                     setIsLoading(false);

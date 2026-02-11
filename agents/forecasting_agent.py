@@ -31,9 +31,10 @@ class ForecastingAgent(BaseAgent):
             )
 
         summary_text = (
-            f"Forecast completed. Historical sales mean: {results['historical_mean']:.2f}. "
-            f"Predicted mean for next period: {results['predicted_mean']:.2f}. "
-            f"Trend identified: {results['trend']}."
+            f"I have projected your future requirements based on a seasonal trend analysis of your sales history. "
+            f"My algorithms detected a clear '{results['trend']}' trend. While your previous average was {results['historical_mean']:.2f} units, "
+            f"I expect this to shift to {results['predicted_mean']:.2f} in the next period. "
+            "This result was calculated by weighting recent performance more heavily to account for current market volatility."
         )
 
         return AgentResponse(
