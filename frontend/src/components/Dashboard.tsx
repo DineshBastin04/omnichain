@@ -37,6 +37,18 @@ const data = [
     { name: 'Sep', sales: 6800, inventory: 4500, forecast: 7000 },
 ];
 
+const suppliers = [
+    { name: 'Logistics Pro', score: 98, status: 'Elite', details: '98/100 on-time rate over 500 shipments.' },
+    { name: 'Swift Harbor', score: 85, status: 'Good', details: 'Historical 85% reliability based on past 3 months of delivery windows.' },
+    { name: 'Global Direct', score: 62, status: 'At Risk', details: 'Delayed 4 out of last 10 shipments, affecting Q3 projections.' },
+];
+
+const dashboardStats = {
+    sales: { value: '$1.42M', growth: '+15.2%', explanation: 'Comparing current performance against historical seasonal benchmarks.' },
+    alerts: { value: '08', growth: '4 Critical', explanation: 'Identified by scanning warehouse reorder points against real-time sales velocity.' },
+    shipments: { value: '64', growth: 'On Track', explanation: 'Aggregated GPS feeds from all 5 major carriers.' }
+};
+
 interface DashboardProps {
     activeTab: string;
     onToggleSidebar: () => void;
@@ -51,31 +63,36 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
         if (e.key === 'Enter' && query.trim()) {
             setIsLoading(true);
             setResponse(null);
-            try {
-                // Mock API call for demo if backend not running, otherwise use fetch
-                // In a real scenario, we'd use: const res = await fetch('/api/v1/agents/query', ...)
 
-                // Simulating a smart agent response based on keywords
-                setTimeout(() => {
-                    let mockRes = "I have analyzed the real-time feed from your Sales and Logistics databases. ";
-                    const lowerQuery = query.toLowerCase();
+            // Simulating a robust, data-aware agent response
+            setTimeout(() => {
+                const lowerQuery = query.toLowerCase();
+                let foundResponse = "";
 
-                    if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics')) {
-                        mockRes += "I've matched your 64 active shipments against historical carrier lead times. By calculating the 'Safety Buffer', I've determined that all 64 are currently 'On Track'. I arrived at this by comparing current GPS coordinates with your typical 3-day delivery window.";
-                    } else if (lowerQuery.includes('sales')) {
-                        mockRes += "Total sales are at $1.42M. When I compare last month's data to this month, I see a clear 15.2% 'Growth Trend'. This wasn't a sudden spike, but a steady day-over-day increase in volume across your top 5 regions.";
-                    } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
-                        mockRes += "My 'Health Check' algorithm shows inventory is stable at 4.2x turnover. However, I flagged 8 stock alerts. I reached this conclusion by identifying 4 SKUs that won't last through the weekend if your current sales speed (velocity) continues.";
-                    } else {
-                        mockRes += "Your overall supply chain health is 'Stable'. I reached this conclusion by aggregating your 64 active shipments and $1.42M in sales. While the numbers are strong, the 'Algorithm Alert' suggests focusing on the 8 inventory warnings to prevent stockouts.";
-                    }
-                    setResponse(mockRes);
-                    setIsLoading(false);
-                }, 1500);
-            } catch (err) {
-                setResponse("Sorry, I encountered an error while processing your request.");
+                // 1. Entity Detection: Suppliers
+                const matchedSupplier = suppliers.find(s => lowerQuery.includes(s.name.toLowerCase()));
+
+                if (matchedSupplier) {
+                    foundResponse = `I see you're asking about ${matchedSupplier.name}. They currently have a ${matchedSupplier.score}% reliability score. ${matchedSupplier.details} I arrived at this by comparing their last 50 shipments against your guaranteed 3-day delivery window.`;
+                }
+
+                // 2. Entity Detection: Dashboard Metrics
+                else if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics')) {
+                    foundResponse = `Your dashboard shows ${dashboardStats.shipments.value} active shipments. This result comes from an aggregate of our 5 carrier APIs. All ${dashboardStats.shipments.value} are 'On Track' based on current velocity and distance to warehouse destination.`;
+                } else if (lowerQuery.includes('sales')) {
+                    foundResponse = `Total sales are currently ${dashboardStats.sales.value} (${dashboardStats.sales.growth}). ${dashboardStats.sales.explanation} This isn't just a number—it indicates a steady 12% increase in sales velocity for your top SKUs.`;
+                } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
+                    foundResponse = `Inventory levels are healthy (4.2x turnover), but we have ${dashboardStats.alerts.value} alerts. ${dashboardStats.alerts.explanation} I recommend acting on the 4 critical alerts to prevent stockouts of your high-velocity items.`;
+                }
+
+                // 3. Fallback to general health with evidence
+                else {
+                    foundResponse = "I have analyzed your real-time supply chain feed. Your overall health is 'Stable'. I reached this conclusion by identifying that while you have 8 inventory alerts, your 64 active shipments and $1.42M in sales indicate strong inbound and outbound momentum.";
+                }
+
+                setResponse(foundResponse);
                 setIsLoading(false);
-            }
+            }, 1200);
         }
     };
 
