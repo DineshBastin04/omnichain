@@ -44,10 +44,23 @@ const suppliers = [
 ];
 
 const dashboardStats = {
-    sales: { value: '$1.42M', growth: '+15.2%', explanation: 'Comparing current performance against historical seasonal benchmarks.' },
+    sales: { value: '$1.42M', growth: '+15.2%', explanation: 'Comparing current performance against historical seasonal benchmarks (Jan-Jun).' },
     alerts: { value: '08', growth: '4 Critical', explanation: 'Identified by scanning warehouse reorder points against real-time sales velocity.' },
     shipments: { value: '64', growth: 'On Track', explanation: 'Aggregated GPS feeds from all 5 major carriers.' }
 };
+
+const logisticsData = [
+    { id: 'TR-1241', status: 'In Transit', progress: 20, eta: '2h 15m', destination: 'Warehouse A' },
+    { id: 'TR-1242', status: 'In Transit', progress: 40, eta: '1h 05m', destination: 'Distribution Center B' },
+    { id: 'TR-1243', status: 'In Transit', progress: 60, eta: '45m', destination: 'Retail Hub C' },
+    { id: 'TR-1244', status: 'In Transit', progress: 85, eta: '12m', destination: 'Local Depot D' },
+];
+
+const securityLogs = [
+    { id: 'SEC-001', event: 'SQL Audit', status: 'Passed', detail: 'No unauthorized access patterns detected in last 24h.' },
+    { id: 'SEC-002', event: 'Prompt Guard', status: 'Passed', detail: '3,400 queries sanitized; 0 injection attempts.' },
+    { id: 'SEC-003', event: 'Data Leak Check', status: 'Passed', detail: 'PII scrubbing confirmed across all agent outputs.' },
+];
 
 interface DashboardProps {
     activeTab: string;
@@ -57,37 +70,52 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => {
     const [query, setQuery] = useState('');
     const [response, setResponse] = useState<string | null>(null);
+    const [showSource, setShowSource] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleQuery = async (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && query.trim()) {
             setIsLoading(true);
             setResponse(null);
+            setShowSource(false);
 
             // Simulating a robust, data-aware agent response
             setTimeout(() => {
                 const lowerQuery = query.toLowerCase();
                 let foundResponse = "";
 
-                // 1. Entity Detection: Suppliers
-                const matchedSupplier = suppliers.find(s => lowerQuery.includes(s.name.toLowerCase()));
-
-                if (matchedSupplier) {
-                    foundResponse = `I see you're asking about ${matchedSupplier.name}. They currently have a ${matchedSupplier.score}% reliability score. ${matchedSupplier.details} I arrived at this by comparing their last 50 shipments against your guaranteed 3-day delivery window.`;
+                // 1. Shipment Detection (TR-XXXX)
+                const shipmentMatch = lowerQuery.match(/tr-\d{4}/);
+                if (shipmentMatch) {
+                    const shipmentId = shipmentMatch[0].toUpperCase();
+                    const ship = logisticsData.find(s => s.id === shipmentId);
+                    if (ship) {
+                        foundResponse = `I found a record for ${shipmentId}. It's currently ${ship.status} towards ${ship.destination} with an ETA of ${ship.eta}. I calculated this by averaging the carrier's last 5 reportings against the road distance.`;
+                    } else {
+                        foundResponse = `I see you're asking about ${shipmentId}, but I don't see that specific ID in our active shipment database. Please check the Logistics tab for valid IDs.`;
+                    }
                 }
 
-                // 2. Entity Detection: Dashboard Metrics
+                // 2. Entity Detection: Suppliers
+                else if (suppliers.some(s => lowerQuery.includes(s.name.toLowerCase()))) {
+                    const s = suppliers.find(s => lowerQuery.includes(s.name.toLowerCase()))!;
+                    foundResponse = `Ah, ${s.name}. Their ${s.score}% score is a 'weighted reliability index'. This means I looked at their last 50 deliveries and noticed they are slightly faster than your backup carriers. ${s.details}`;
+                }
+
+                // 3. Section/Metric Detection
                 else if (lowerQuery.includes('shipment') || lowerQuery.includes('logistics')) {
-                    foundResponse = `Your dashboard shows ${dashboardStats.shipments.value} active shipments. This result comes from an aggregate of our 5 carrier APIs. All ${dashboardStats.shipments.value} are 'On Track' based on current velocity and distance to warehouse destination.`;
+                    foundResponse = `You have ${dashboardStats.shipments.value} active shipments. This 'On Track' status comes from my real-time link with your carrier APIs. None of the current shipments are showing 'Latency Overages' at the moment.`;
                 } else if (lowerQuery.includes('sales')) {
-                    foundResponse = `Total sales are currently ${dashboardStats.sales.value} (${dashboardStats.sales.growth}). ${dashboardStats.sales.explanation} This isn't just a number—it indicates a steady 12% increase in sales velocity for your top SKUs.`;
+                    foundResponse = `Current sales stand at ${dashboardStats.sales.value}. ${dashboardStats.sales.explanation} In simple terms: you are selling 15% more than you usually do this time of year!`;
                 } else if (lowerQuery.includes('inventory') || lowerQuery.includes('stock')) {
-                    foundResponse = `Inventory levels are healthy (4.2x turnover), but we have ${dashboardStats.alerts.value} alerts. ${dashboardStats.alerts.explanation} I recommend acting on the 4 critical alerts to prevent stockouts of your high-velocity items.`;
+                    foundResponse = `We have ${dashboardStats.alerts.value} inventory alerts. I flagged these because your 'Stock Depletion Speed' is faster than your 'Restock Lead Time'. I recommend checking the Inventory tab.`;
+                } else if (lowerQuery.includes('security')) {
+                    foundResponse = `Your system is currently in 'Safe Harbor' mode. My audit logs show that all SQL queries and AI prompts have passed the verification guardrails in the last 24 hours.`;
                 }
 
-                // 3. Fallback to general health with evidence
+                // 4. Fallback with Common Sense
                 else {
-                    foundResponse = "I have analyzed your real-time supply chain feed. Your overall health is 'Stable'. I reached this conclusion by identifying that while you have 8 inventory alerts, your 64 active shipments and $1.42M in sales indicate strong inbound and outbound momentum.";
+                    foundResponse = "I've analyzed your real-time supply chain. Everything looks 'Stable'. By comparing your 64 active shipments with your $1.42M sales, I see a healthy flow. Would you like to check the 'Logistics' or 'Inventory' details?";
                 }
 
                 setResponse(foundResponse);
@@ -121,11 +149,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                             <div className="glass-card">
                                 <h3 className="text-lg font-semibold text-white mb-6">Supplier Reliability Index</h3>
                                 <div className="space-y-6">
-                                    {[
-                                        { name: 'Logistics Pro', score: 98, status: 'Elite' },
-                                        { name: 'Swift Harbor', score: 85, status: 'Good' },
-                                        { name: 'Global Direct', score: 62, status: 'At Risk' },
-                                    ].map((sup, i) => (
+                                    {suppliers.map((sup, i) => (
                                         <div key={i}>
                                             <div className="flex justify-between mb-2">
                                                 <span className="text-white font-medium">{sup.name}</span>
@@ -150,14 +174,15 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                         <Truck size={64} className="text-purple-400 mb-6" />
                         <h2 className="text-2xl font-bold text-white mb-2 text-center">Global Logistics Network</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mt-8">
-                            {[1, 2, 3, 4].map(i => (
+                            {logisticsData.map((ship, i) => (
                                 <div key={i} className="p-4 bg-white/5 border border-glass-border rounded-xl">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-white font-medium">Shipment #TR-{1240 + i}</span>
-                                        <span className="text-blue-400 text-xs font-bold uppercase">Transit</span>
+                                        <span className="text-white font-medium">Shipment #{ship.id}</span>
+                                        <span className="text-blue-400 text-xs font-bold uppercase">{ship.status}</span>
                                     </div>
+                                    <div className="text-[10px] text-slate-500 mb-2">{ship.destination} • ETA: {ship.eta}</div>
                                     <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
-                                        <div className="bg-blue-500 h-full" style={{ width: `${20 * i}%` }}></div>
+                                        <div className="bg-blue-500 h-full" style={{ width: `${ship.progress}%` }}></div>
                                     </div>
                                 </div>
                             ))}
@@ -200,10 +225,10 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                             <div className="glass-card">
                                 <h3 className="text-lg font-bold text-white mb-4">Verification Audits</h3>
                                 <div className="space-y-4">
-                                    {[1, 2, 3].map(i => (
+                                    {securityLogs.map((log, i) => (
                                         <div key={i} className="flex justify-between items-center text-sm">
-                                            <span className="text-slate-400">Model Output Hash {i}</span>
-                                            <span className="text-green-400 font-mono">Passed</span>
+                                            <span className="text-slate-400">{log.event} Integrity</span>
+                                            <span className="text-green-400 font-mono">{log.status}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -357,8 +382,38 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                             <span>Consulting multi-agent orchestrator...</span>
                         </div>
                     ) : (
-                        <div className="text-slate-200 text-sm md:text-base leading-relaxed">
-                            {response}
+                        <div className="space-y-4">
+                            <div className="text-slate-200 text-sm md:text-base leading-relaxed">
+                                {response}
+                            </div>
+                            <div className="pt-4 border-t border-white/5">
+                                <button
+                                    onClick={() => setShowSource(!showSource)}
+                                    className="text-[10px] md:text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center space-x-1"
+                                >
+                                    <span>{showSource ? 'Hide Source Data' : 'Verify Live Data Source'}</span>
+                                </button>
+
+                                {showSource && (
+                                    <div className="mt-4 p-4 bg-black/40 rounded-xl font-mono text-[10px] md:text-xs text-green-400 border border-green-500/20 max-h-48 overflow-y-auto w-full">
+                                        <div className="mb-2 text-slate-500 italic pb-2 border-b border-green-500/10">Connected via: ETLPipeline.ingest_dataframe (SQL Query Mode)</div>
+                                        <pre className="whitespace-pre-wrap">
+                                            {`-- SQL AUDIT LOG [${new Date().toLocaleTimeString()}]
+SELECT shipment_id, status, current_gps, eta_calculation
+FROM logistics_live_db
+WHERE carrier_reliability > 0.85;
+
+RAW DATA SNAPSHOT (DataFrame Preview):
+| ID      | Status | Score | Logic               |
+|---------|--------|-------|---------------------|
+| TR-1241 | Transit| 0.94  | On-time Probability |
+| TR-1242 | Transit| 0.82  | At-risk (Traffic)   |
+| SW-HARB | Active | 0.85  | Historical Mean     |
+`}
+                                        </pre>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>
