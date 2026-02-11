@@ -198,27 +198,7 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
             default:
                 return (
                     <>
-                        {/* Response Area */}
-                        {(isLoading || response) && (
-                            <div className="glass-card mb-8 border-blue-500/30 bg-blue-500/5 animate-in fade-in slide-in-from-top-4 duration-500">
-                                <div className="flex items-center space-x-3 mb-4">
-                                    <Sparkles className="text-blue-400" size={20} />
-                                    <h3 className="text-white font-semibold">AI Assistant Response</h3>
-                                </div>
-                                {isLoading ? (
-                                    <div className="flex items-center space-x-2 text-slate-400 italic text-sm">
-                                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-.3s]"></div>
-                                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
-                                        <span>Consulting multi-agent orchestrator...</span>
-                                    </div>
-                                ) : (
-                                    <div className="text-slate-200 text-sm md:text-base leading-relaxed">
-                                        {response}
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                        {/* Stats Grid */}
 
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -345,6 +325,27 @@ const Dashboard: React.FC<DashboardProps> = ({ activeTab, onToggleSidebar }) => 
                     <Sparkles className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 animate-pulse" size={18} />
                 </div>
             </header>
+
+            {(isLoading || response) && (
+                <div className="glass-card mb-8 border-blue-500/30 bg-blue-500/5 animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="flex items-center space-x-3 mb-4">
+                        <Sparkles className="text-blue-400" size={20} />
+                        <h3 className="text-white font-semibold">AI Assistant Response</h3>
+                    </div>
+                    {isLoading ? (
+                        <div className="flex items-center space-x-2 text-slate-400 italic text-sm">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-.3s]"></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-.5s]"></div>
+                            <span>Consulting multi-agent orchestrator...</span>
+                        </div>
+                    ) : (
+                        <div className="text-slate-200 text-sm md:text-base leading-relaxed">
+                            {response}
+                        </div>
+                    )}
+                </div>
+            )}
 
             {renderContent()}
         </main>
