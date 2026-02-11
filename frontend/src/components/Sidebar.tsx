@@ -11,13 +11,18 @@ import {
     LogOut
 } from 'lucide-react';
 
-const Sidebar = () => {
+interface SidebarProps {
+    activeTab: string;
+    onTabChange: (tab: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
     const menuItems = [
-        { icon: <LayoutDashboard size={20} />, label: 'Overview', active: true },
-        { icon: <BarChart3 size={20} />, label: 'Analytics' },
-        { icon: <Truck size={20} />, label: 'Logistics' },
-        { icon: <Package size={20} />, label: 'Inventory' },
-        { icon: <ShieldCheck size={20} />, label: 'Security' },
+        { icon: <LayoutDashboard size={20} />, label: 'Overview', id: 'overview' },
+        { icon: <BarChart3 size={20} />, label: 'Analytics', id: 'analytics' },
+        { icon: <Truck size={20} />, label: 'Logistics', id: 'logistics' },
+        { icon: <Package size={20} />, label: 'Inventory', id: 'inventory' },
+        { icon: <ShieldCheck size={20} />, label: 'Security', id: 'security' },
     ];
 
     return (
@@ -35,7 +40,8 @@ const Sidebar = () => {
                 {menuItems.map((item, idx) => (
                     <button
                         key={idx}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${item.active
+                        onClick={() => onTabChange(item.id)}
+                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${activeTab === item.id
                             ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
                             : 'text-slate-400 hover:bg-white/5 hover:text-white'
                             }`}
@@ -57,3 +63,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

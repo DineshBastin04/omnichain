@@ -2,6 +2,17 @@
 
 import React, { useState } from 'react';
 import {
+    Search,
+    Sparkles,
+    TrendingUp,
+    AlertTriangle,
+    Box,
+    ShieldCheck,
+    BarChart3,
+    Truck,
+    Package
+} from 'lucide-react';
+import {
     AreaChart,
     Area,
     XAxis,
@@ -12,7 +23,6 @@ import {
     BarChart,
     Bar
 } from 'recharts';
-import { Search, Sparkles, TrendingUp, AlertTriangle, Box, ShieldCheck } from 'lucide-react';
 
 const data = [
     { name: 'Jan', sales: 4000, inventory: 2400 },
@@ -23,15 +33,194 @@ const data = [
     { name: 'Jun', sales: 2390, inventory: 3800 },
 ];
 
-const Dashboard = () => {
+interface DashboardProps {
+    activeTab: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ activeTab }) => {
     const [query, setQuery] = useState('');
+
+    const renderContent = () => {
+        switch (activeTab) {
+            case 'analytics':
+                return (
+                    <div className="glass-card flex flex-col items-center justify-center min-h-[400px]">
+                        <BarChart3 size={64} className="text-blue-400 mb-6 animate-pulse" />
+                        <h2 className="text-2xl font-bold text-white mb-2">Advanced Analytics</h2>
+                        <p className="text-slate-400 text-center max-w-md">
+                            Deep-dive into sales patterns and supplier performance. Our AI indexer is currently processing 1.4M data points for real-time forecasting.
+                        </p>
+                    </div>
+                );
+            case 'logistics':
+                return (
+                    <div className="glass-card flex flex-col items-center justify-center min-h-[400px]">
+                        <Truck size={64} className="text-purple-400 mb-6" />
+                        <h2 className="text-2xl font-bold text-white mb-2">Global Logistics Network</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mt-8">
+                            {[1, 2, 3, 4].map(i => (
+                                <div key={i} className="p-4 bg-white/5 border border-glass-border rounded-xl">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-white font-medium">Shipment #TR-{1240 + i}</span>
+                                        <span className="text-blue-400 text-xs font-bold uppercase">Transit</span>
+                                    </div>
+                                    <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                                        <div className="bg-blue-500 h-full" style={{ width: `${20 * i}%` }}></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            case 'inventory':
+                return (
+                    <div className="glass-card flex flex-col items-center justify-center min-h-[400px]">
+                        <Package size={64} className="text-green-400 mb-6" />
+                        <h2 className="text-2xl font-bold text-white mb-2">Smart Inventory Management</h2>
+                        <p className="text-slate-400 mb-8">Stock optimization across 14 warehouses</p>
+                        <div className="w-full h-64 bg-white/5 rounded-xl border border-glass-border flex items-center justify-center">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={data}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+                                    <XAxis dataKey="name" stroke="#64748B" axisLine={false} tickLine={false} />
+                                    <YAxis stroke="#64748B" axisLine={false} tickLine={false} />
+                                    <Tooltip
+                                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                                        contentStyle={{ background: '#0F172A', border: '1px solid #1E293B', borderRadius: '12px' }}
+                                    />
+                                    <Bar dataKey="inventory" fill="#10B981" radius={[4, 4, 0, 0]} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+                );
+            case 'security':
+                return (
+                    <div className="space-y-6">
+                        <div className="glass-card bg-red-500/5 border-red-500/20">
+                            <div className="flex items-center space-x-4 mb-4">
+                                <ShieldCheck className="text-red-400" size={32} />
+                                <h2 className="text-2xl font-bold text-white">AI Security Guardrails</h2>
+                            </div>
+                            <p className="text-slate-300">Active monitoring: Prompt Injection, SQL Injection, Data Leaks.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="glass-card">
+                                <h3 className="text-lg font-bold text-white mb-4">Verification Audits</h3>
+                                <div className="space-y-4">
+                                    {[1, 2, 3].map(i => (
+                                        <div key={i} className="flex justify-between items-center text-sm">
+                                            <span className="text-slate-400">Model Output Hash {i}</span>
+                                            <span className="text-green-400 font-mono">Passed</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case 'overview':
+            default:
+                return (
+                    <>
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            {[
+                                { label: 'Total Sales', value: '$1.2M', growth: '+12.5%', icon: <TrendingUp className="text-green-400" /> },
+                                { label: 'Stock Alerts', value: '14', growth: 'Low Priority', icon: <AlertTriangle className="text-amber-400" /> },
+                                { label: 'Active Shipments', value: '42', growth: 'On Track', icon: <Box className="text-blue-400" /> },
+                            ].map((stat, i) => (
+                                <div key={i} className="glass-card animate-glow">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <span className="text-slate-400 font-medium">{stat.label}</span>
+                                        {stat.icon}
+                                    </div>
+                                    <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                                    <span className="text-sm text-slate-500">{stat.growth} from last month</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Main Charts */}
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+                            <div className="glass-card">
+                                <h3 className="text-lg font-semibold text-white mb-6">Sales Performance</h3>
+                                <div className="h-80">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart data={data}>
+                                            <defs>
+                                                <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+                                            <XAxis dataKey="name" stroke="#64748B" axisLine={false} tickLine={false} />
+                                            <YAxis stroke="#64748B" axisLine={false} tickLine={false} />
+                                            <Tooltip
+                                                contentStyle={{ background: '#0F172A', border: '1px solid #1E293B', borderRadius: '12px' }}
+                                            />
+                                            <Area type="monotone" dataKey="sales" stroke="#3B82F6" fillOpacity={1} fill="url(#colorSales)" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+
+                            <div className="glass-card">
+                                <h3 className="text-lg font-semibold text-white mb-6">Inventory Levels</h3>
+                                <div className="h-80">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={data}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+                                            <XAxis dataKey="name" stroke="#64748B" axisLine={false} tickLine={false} />
+                                            <YAxis stroke="#64748B" axisLine={false} tickLine={false} />
+                                            <Tooltip
+                                                cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                                                contentStyle={{ background: '#0F172A', border: '1px solid #1E293B', borderRadius: '12px' }}
+                                            />
+                                            <Bar dataKey="inventory" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Agent Activity Section */}
+                        <div className="glass-card">
+                            <h3 className="text-lg font-semibold text-white mb-4">Agent Verification Logs</h3>
+                            <div className="space-y-4">
+                                {[
+                                    { agent: 'EDA Agent', action: 'Anomaly detected in supplier latency', time: '2 mins ago', status: 'verified' },
+                                    { agent: 'Forecasting Agent', action: 'Demand spike predicted for Q3 electronics', time: '15 mins ago', status: 'verified' },
+                                ].map((log, i) => (
+                                    <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-glass-border">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                                <ShieldCheck size={20} />
+                                            </div>
+                                            <div>
+                                                <div className="text-white font-medium">{log.action}</div>
+                                                <div className="text-sm text-slate-500">{log.agent} • {log.time}</div>
+                                            </div>
+                                        </div>
+                                        <span className="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-bold rounded-full uppercase tracking-wider border border-green-500/20">
+                                            {log.status}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                );
+        }
+    };
 
     return (
         <main className="ml-64 p-8 flex-1 overflow-y-auto">
             {/* Header Area */}
             <header className="flex justify-between items-center mb-8">
                 <div>
-                    <h2 className="text-3xl font-bold text-white">OmniChain AI Operations</h2>
+                    <h2 className="text-3xl font-bold text-white">OmniChain AI {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
                     <p className="text-slate-400">Real-time insights and agentic optimizations</p>
                 </div>
 
@@ -48,93 +237,7 @@ const Dashboard = () => {
                 </div>
             </header>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {[
-                    { label: 'Total Sales', value: '$1.2M', growth: '+12.5%', icon: <TrendingUp className="text-green-400" /> },
-                    { label: 'Stock Alerts', value: '14', growth: 'Low Priority', icon: <AlertTriangle className="text-amber-400" /> },
-                    { label: 'Active Shipments', value: '42', growth: 'On Track', icon: <Box className="text-blue-400" /> },
-                ].map((stat, i) => (
-                    <div key={i} className="glass-card animate-glow">
-                        <div className="flex justify-between items-start mb-4">
-                            <span className="text-slate-400 font-medium">{stat.label}</span>
-                            {stat.icon}
-                        </div>
-                        <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                        <span className="text-sm text-slate-500">{stat.growth} from last month</span>
-                    </div>
-                ))}
-            </div>
-
-            {/* Main Charts */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-                <div className="glass-card">
-                    <h3 className="text-lg font-semibold text-white mb-6">Sales Performance</h3>
-                    <div className="h-80">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data}>
-                                <defs>
-                                    <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
-                                <XAxis dataKey="name" stroke="#64748B" axisLine={false} tickLine={false} />
-                                <YAxis stroke="#64748B" axisLine={false} tickLine={false} />
-                                <Tooltip
-                                    contentStyle={{ background: '#0F172A', border: '1px solid #1E293B', borderRadius: '12px' }}
-                                />
-                                <Area type="monotone" dataKey="sales" stroke="#3B82F6" fillOpacity={1} fill="url(#colorSales)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
-                <div className="glass-card">
-                    <h3 className="text-lg font-semibold text-white mb-6">Inventory Levels</h3>
-                    <div className="h-80">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
-                                <XAxis dataKey="name" stroke="#64748B" axisLine={false} tickLine={false} />
-                                <YAxis stroke="#64748B" axisLine={false} tickLine={false} />
-                                <Tooltip
-                                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                                    contentStyle={{ background: '#0F172A', border: '1px solid #1E293B', borderRadius: '12px' }}
-                                />
-                                <Bar dataKey="inventory" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-            </div>
-
-            {/* Agent Activity Section */}
-            <div className="glass-card">
-                <h3 className="text-lg font-semibold text-white mb-4">Agent Verification Logs</h3>
-                <div className="space-y-4">
-                    {[
-                        { agent: 'EDA Agent', action: 'Anomaly detected in supplier latency', time: '2 mins ago', status: 'verified' },
-                        { agent: 'Forecasting Agent', action: 'Demand spike predicted for Q3 electronics', time: '15 mins ago', status: 'verified' },
-                    ].map((log, i) => (
-                        <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-glass-border">
-                            <div className="flex items-center space-x-4">
-                                <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400">
-                                    <ShieldCheck size={20} />
-                                </div>
-                                <div>
-                                    <div className="text-white font-medium">{log.action}</div>
-                                    <div className="text-sm text-slate-500">{log.agent} • {log.time}</div>
-                                </div>
-                            </div>
-                            <span className="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-bold rounded-full uppercase tracking-wider border border-green-500/20">
-                                {log.status}
-                            </span>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            {renderContent()}
         </main>
     );
 };
