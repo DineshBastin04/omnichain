@@ -63,24 +63,31 @@ The platform utilizes a **Stateful Multi-Agent System** managed via **LangGraph*
 
 ---
 
-## 📱 LinkedIn Post Draft
+## 📱 LinkedIn Post Draft (Enhanced)
 
-**Subject: Automating Supply Chain Intelligence with Multi-Agent Systems 🤖📦**
+**Subject: Beyond Dashboards: Building the Future of Supply Chain with Multi-Agent AI 🤖📦**
 
-Thrilled to share what I've been working on: **OmniChain AI**! 🚀
+Thrilled to share my latest project: **OmniChain AI**! 🚀
 
-Modern supply chains are too complex for manual analysis. That's why I built OmniChain—a production-ready platform that uses a multi-agent orchestration layer to transform "Data Mess" into "Decision Success."
+Supply chains are increasingly volatile, and traditional dashboards just aren’t enough anymore. That's why I built OmniChain—a production-ready platform that uses a multi-agent orchestration layer to transform "Data Mess" into "Decision Success."
 
-**Key Technical Highlights:**
-✅ **Orchestration**: Powered by #LangGraph for complex, stateful AI workflows.
-✅ **Speed**: Integrated #DuckDB for lightning-fast analytical profiling.
-✅ **Intelligence**: Specialized agents for EDA, Demand Forecasting, and Security.
-✅ **Security**: Built-in AI Firewalls and Verification agents for enterprise-grade safety.
-✅ **UI**: A sleek, high-performance dashboard built with #NextJS and #TailwindCSS.
+**What makes OmniChain different?**
 
-**Why it matters?**
-Beyond the tech, this is about #DecisionVelocity. Predictive forecasting means fewer stockouts. Automated anomalies detection means catching errors before they hit the bottom line. Secure-by-design means peace of mind for enterprises.
+It’s not just a UI; it’s an active intelligence layer. By leveraging an agentic workflow, OmniChain handles the heavy lifting of analysis so teams can focus on execution.
 
-Supply chain is no longer just about logistics; it's about intelligence. 💡
+**Key Technical & Feature Highlights:**
+✅ **Orchestration**: Built with #LangGraph for complex, stateful AI workflows. It doesn't just answer; it reasons through steps.
+✅ **Automated Analysis (EDA)**: Specialized agents perform lightning-fast data profiling using #DuckDB. It detects Z-Score anomalies and IQR outliers in seconds.
+✅ **Interactive AI Assistant**: A grounded assistant that speaks the language of your supply chain. It doesn't hallucinate—it uses live data to explain "why" a forecast changed.
+✅ **Predictive Forecasting**: Uses trend-weighted algorithms to project demand, helping prevent stockouts before they happen.
+✅ **Security-First (AI Guardrails)**: Enterprise-grade safety with built-in AI Firewalls and Verification agents to prevent prompt injection and ensure data integrity.
+✅ **Visual Excellence**: A sleek, high-performance glassmorphic dashboard built with #NextJS, #TailwindCSS, and #Recharts.
 
-#AI #SupplyChain #AgenticAI #MachineLearning #NextJS #FastAPI #DataScience #EnterpriseAI #Innovation
+**The Impact?**
+This is about #DecisionVelocity. It’s moving from reactive firefighting to proactive, data-driven planning. Secure-by-design, fast-by-default, and intelligent-by-nature.
+
+The future of logistics isn't just about moving goods—it's about moving intelligence. 💡
+
+Check out the technical breakdown below! 👇
+
+#AI #SupplyChain #AgenticAI #MachineLearning #NextJS #FastAPI #DataScience #EnterpriseAI #Innovation #LangGraph #DataAnalytics
