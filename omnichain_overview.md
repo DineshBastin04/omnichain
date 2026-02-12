@@ -90,4 +90,41 @@ The future of logistics isn't just about moving goods—it's about moving intell
 
 Check out the technical breakdown below! 👇
 
-#AI #SupplyChain #AgenticAI #MachineLearning #NextJS #FastAPI #DataScience #EnterpriseAI #Innovation #LangGraph #DataAnalytics
+## 📰 LinkedIn Article Draft (Thought Leadership Style)
+
+**Title: The Agentic Shift: Why Traditional Dashboards are Failing the Modern Supply Chain**
+
+In the world of supply chain management, we’ve reached a breaking point. For years, we’ve relied on dashboards that do nothing but show us what has already happened. We stare at red bars and late shipment flags, reacting to fires rather than preventing them. 
+
+But what if your dashboard didn’t just show you a data mess? What if it actually *thought* through the solution with you?
+
+Enter **OmniChain AI**—a project I’ve been building to bridge the gap between "Big Data" and "Actionable Intelligence."
+
+### The Problem: Reactive Firefighting
+Supply chains are more volatile than ever. From global logistics delays to sudden shifts in consumer demand, the volume of data is simply too high for manual analysis. Managers are suffering from "Data Indigestion"—too many metrics, not enough insights.
+
+### The Solution: Multi-Agent Orchestration
+OmniChain AI isn’t just a new UI; it’s a **Micro-Agentic Architecture**. Instead of one giant, heavy model, the system uses specialized AI agents that collaborate in real-time:
+
+1. **The EDA Agent**: Automatically profiles massive datasets in seconds. It doesn't just show a table; it uses Z-Score and IQR algorithms to pinpoint anomalies that a human might miss.
+2. **The Forecasting Agent**: Uses seasonal trend-weighted linear regression to look ahead. It weights recent history more heavily to stay grounded in current market reality.
+3. **The Security Agent (The AI Firewall)**: This is the unsung hero. It ensures every interaction is sanitized, preventing prompt injections and strictly adhering to enterprise guardrails.
+
+### Why Technology Choice Matters
+To build a production-ready system, I chose a stack built for speed and reliability:
+* **LangGraph**: For managing complex, stateful agentic workflows.
+* **DuckDB**: For ultra-fast, in-process analytical queries.
+* **FastAPI & Next.js**: For a seamless, high-performance developer and user experience.
+
+### Beyond the Buzzwords: The Real Impact
+At its core, OmniChain is about **Decision Velocity**. It’s about moving from "What happened?" to "What should we do?" in seconds. 
+
+Predictive forecasting reduces stockouts. Automated EDA saves hundreds of manual hours. Built-in security brings AI into the enterprise safely.
+
+The future of the supply chain isn't just about moving boxes; it's about moving at the speed of intelligence.
+
+***
+
+*I’d love to hear from other supply chain pros and AI engineers—how are you dealing with data complexity in your workflows? Check out the full breakdown in my repo!*
+
+#AI #SupplyChain #AgenticAI #MachineLearning #NextJS #FastAPI #DataScience #EnterpriseAI #Innovation #LangGraph #DigitalTransformation
