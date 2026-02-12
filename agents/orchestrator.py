@@ -57,7 +57,12 @@ class WorkflowOrchestrator:
 
     async def run_guardrail(self, state: AgentState) -> dict:
         is_safe = not AIProtectionLayer.check_prompt_injection(state["query"])
-        return {"is_safe": is_safe}
+        if not is_safe:
+            return {
+                "is_safe": False,
+                "final_response": "[REDACTED: SECURITY VIOLATION]",
+            }
+        return {"is_safe": True}
 
     def route_after_guardrail(self, state: AgentState) -> str:
         if not state["is_safe"]:

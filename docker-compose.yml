@@ -30,11 +30,11 @@ services:
       - .env
 
   db:
-    image: postgres:15-alphine
+    image: postgres:15-alpine
     environment:
-      POSTGRES_USER: ${DB_USER:-admin}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-      POSTGRES_DB: ${DB_NAME:-supply_chain}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-supply_chain}
     ports:
       - "5432:5432"
     volumes:

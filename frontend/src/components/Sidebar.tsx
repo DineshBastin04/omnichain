@@ -1,12 +1,12 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 import {
     LayoutDashboard,
     BarChart3,
     Truck,
     Package,
-    Settings,
     ShieldCheck,
     LogOut,
     X
@@ -46,7 +46,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isOpen, onClo
                 <div className="p-8 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 relative">
-                            <img src="/logo.png" alt="OmniChain AI Logo" className="w-full h-full object-contain" />
+                            <Image
+                                src="/logo.png"
+                                alt="OmniChain AI Logo"
+                                fill
+                                sizes="40px"
+                                className="object-contain"
+                            />
                         </div>
                         <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                             OmniChain AI

@@ -11,7 +11,8 @@ async def test_eda_agent_execution():
     response = await agent.execute("Analyze this", context={"dataframe": df})
     
     assert response.agent_name == "EDA Agent"
-    assert "Analysis complete" in response.content
+    assert "I have thoroughly analyzed the dataset" in response.content
+    assert "anomalies" in response.metadata
     assert response.confidence_score > 0.9
 
 @pytest.mark.asyncio
@@ -21,7 +22,7 @@ async def test_forecasting_agent_execution():
     response = await agent.execute("Forecast sales", context={"history": df})
     
     assert response.agent_name == "Forecasting Agent"
-    assert "Forecast completed" in response.content
+    assert "I have projected your future requirements" in response.content
     assert "predicted_mean" in response.metadata
 
 @pytest.mark.asyncio
